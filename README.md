@@ -195,7 +195,9 @@ Then, on your own separate terminal (NOT Sherlock), replacing \<SUNetID\> with y
 ssh -XYNfL \<PORTNum\>:sh03-11n13:\<PORTNum\> <SUNetID>@sherlock.stanford.edu
 ```
 Then on any browser on your computer, go to the following url, replacing \<PORTNum\> with your Port Number
-> localhost:\<PORTNum\>
+```
+localhost:\<PORTNum\>
+```
 Note: Step 4 can take 5-10 minutes to start up (or faster), so continue to refresh if you don't see anything yet
 Once you see the login screen, you can log in with the credentials you inputted at step 3
 ## Step 5 : Configure CryoSPARC

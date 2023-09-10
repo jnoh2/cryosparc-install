@@ -2,8 +2,8 @@
 Steps were derived from the [instructions](https://guide.cryosparc.com/setup-configuration-and-management/how-to-download-install-and-configure/downloading-and-installing-cryosparc) from CryoSPARC and a presentation by Zhiyong Zhang in the SRCC-support team. Additional thank you to Haoqing Wang for advice & debugging at several steps, and to Josh Carter for test running the whole thing and finding errors to fix.
 
 ## Step 1 : Get a license number from CryoSPARC & port number to use for the lab
-For the license number, fill out the form at their download [website](https://cryosparc.com/download), and you'll get an e-mail with the license number
-For the port number, go to the Barnes Lab excel sheet listing empty and used port numbers. Find a port that is either empty or used by someone who is no longer likely to use it again (i.e. no longer in the lab). It should be a 5 digit number like 39000.
+- For the license number, fill out the form at their download [website](https://cryosparc.com/download), and you'll get an e-mail with the license number
+- For the port number, go to the Barnes Lab drive and under "Inventories" find "Sherlock Port Availabilities" sheet listing empty and used port numbers. Find a port that is either empty or used by someone who is no longer likely to use it again (i.e. no longer in the lab). It should be a 5 digit number like 39000.
 ## Step 2 : Download CryoSPARC to $GROUP_HOME
 Connect to dev node
 ```

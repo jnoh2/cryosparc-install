@@ -208,8 +208,8 @@ And you're done! Test out the functionality of the installation by processing wi
 
 ## Step 6 : Submit Jobs
 For a given job, create and configure your job as needed. When you click "Queue Job" and you're given the option to modify the category "Queue to Lane"
-> Select "barnes-sherlock (cluster)"
-> Select the number of gpus and amount of time you will need
-> Click "Queue"
+1. Select "barnes-sherlock (cluster)"
+2. Select the number of gpus and amount of time you will need
+3. Click "Queue"
 
 Some things that haven't been written in yet: adding additional partitions/nodes, installations for using 3DFlex

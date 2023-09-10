@@ -1,9 +1,9 @@
 # Installing CryoSPARC on Sherlock
 Steps were derived from the [instructions](https://guide.cryosparc.com/setup-configuration-and-management/how-to-download-install-and-configure/downloading-and-installing-cryosparc) from CryoSPARC and a presentation by Zhiyong Zhang in the SRCC-support team. Additional thank you to Haoqing Wang for advice & debugging at several steps.
 
-## Step 1 : Get a license number from CryoSPARC
-Fill out the form at their download [website](https://cryosparc.com/download)
-You'll get an e-mail with the license number
+## Step 1 : Get a license number from CryoSPARC & port number to use for the lab
+For the license number, fill out the form at their download [website](https://cryosparc.com/download), and you'll get an e-mail with the license number
+For the port number, go to the Barnes Lab excel sheet listing empty and used port numbers. Find a port that is either empty or used by someone who is no longer likely to use it again (i.e. no longer in the lab). It should be a 5 digit number like 39000.
 ## Step 2 : Download CryoSPARC to $GROUP_HOME
 Connect to dev node
 ```
@@ -16,10 +16,12 @@ screen -S <SUNetID>_cs
 Set variables to use during the rest of the installation
 Replace \<SUNetID\> with your SUNetID
 Replace \<LicenseID\> with your License ID
+Replace \<PORTNum\> with your selected Port Number
 ```
 export SUNETID=<SUNetID>
 export CS_PATH=$GROUP_HOME/$SUNETID_cs
 export LICENSE_ID=<LicenseID>
+export PORT_NUM=<PORTNum>
 ```
 Create a folder to download into
 ```
@@ -38,7 +40,7 @@ tar -xf cryosparc_worker.tar.gz cryosparc_worker
 Install CryoSPARC Master
 ```
 cd cryosparc_master
-./install.sh --license $LICENSE_ID --hostname sh03-11n13.int --dbpath $CS_PATH/cryosparc_db --port 39000
+./install.sh --license $LICENSE_ID --hostname sh03-11n13.int --dbpath $CS_PATH/cryosparc_db --port $PORT_NUM
 ```
 Start CryoSPARC
 ```
@@ -58,7 +60,7 @@ cd ..
 cd cryosparc_worker
 ml cuda/11.7.1
 ./install.sh --license $LICENSE_ID --cudapath $CUDA_HOME
-./bin/cryosparcw connect --worker sh03-11n13 --master sh03-11n13 --port 39000 --nossd
+./bin/cryosparcw connect --worker sh03-11n13 --master sh03-11n13 --port $PORT_NUM --nossd
 cd ..
 ```
 Prepare to connect master to worker. Copy and paste three following blocks of code
@@ -188,11 +190,12 @@ Exit the dev mode
 ```
 exit
 ```
-Then, on your own separate terminal (NOT Sherlock), replacing \<SUNetID\> with your SUNetID (this should be similar to logging on to Sherlock)
+Then, on your own separate terminal (NOT Sherlock), replacing \<SUNetID\> with your SUNetID (this should be similar to logging on to Sherlock) and \<PORTNum\> with your Port Number
 ```
-ssh -XYNfL 39000:sh03-11n13:39000 <SUNetID>@sherlock.stanford.edu
+ssh -XYNfL \<PORTNum\>:sh03-11n13:\<PORTNum\> <SUNetID>@sherlock.stanford.edu
 ```
-Then on any browser on your computer, go to [localhost:39000](localhost:39000)
+Then on any browser on your computer, go to the following url, replacing \<PORTNum\> with your Port Number
+> localhost:\<PORTNum\>
 Note: Step 4 can take 5-10 minutes to start up (or faster), so continue to refresh if you don't see anything yet
 Once you see the login screen, you can log in with the credentials you inputted at step 3
 ## Step 5 : Configure CryoSPARC

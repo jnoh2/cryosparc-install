@@ -1,5 +1,5 @@
 # Installing CryoSPARC on Sherlock
-Steps were derived from the [instructions](https://guide.cryosparc.com/setup-configuration-and-management/how-to-download-install-and-configure/downloading-and-installing-cryosparc) from CryoSPARC and a presentation by Zhiyong Zhang in the SRCC-support team. Additional thank you to Haoqing Wang for advice & debugging at several steps.
+Steps were derived from the [instructions](https://guide.cryosparc.com/setup-configuration-and-management/how-to-download-install-and-configure/downloading-and-installing-cryosparc) from CryoSPARC and a presentation by Zhiyong Zhang in the SRCC-support team. Additional thank you to Haoqing Wang for advice & debugging at several steps, and to Josh Carter for test running the whole thing and finding errors to fix.
 
 ## Step 1 : Get a license number from CryoSPARC & port number to use for the lab
 For the license number, fill out the form at their download [website](https://cryosparc.com/download), and you'll get an e-mail with the license number
@@ -196,7 +196,7 @@ ssh -XYNfL \<PORTNum\>:sh03-11n13:\<PORTNum\> <SUNetID>@sherlock.stanford.edu
 ```
 Then on any browser on your computer, go to the following url, replacing \<PORTNum\> with your Port Number
 ```
-localhost:\<PORTNum\>
+localhost:<PORTNum>
 ```
 Note: Step 4 can take 5-10 minutes to start up (or faster), so continue to refresh if you don't see anything yet
 Once you see the login screen, you can log in with the credentials you inputted at step 3

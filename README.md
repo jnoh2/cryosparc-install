@@ -182,17 +182,17 @@ squeue -u $SUNETID
 ## Step 5 : Connect to the CryoSPARC GUI
 Terminate the screen
 ```
-Exit
+exit
 ```
 Exit the dev mode
 ```
-Exit
+exit
 ```
 Then, on your own separate terminal (NOT Sherlock), replacing \<SUNetID\> with your SUNetID (this should be similar to logging on to Sherlock)
 ```
-ssh -XYNfL 7000:sh03-11n13:39000 <SUNetID>@sherlock.stanford.edu
+ssh -XYNfL 39000:sh03-11n13:39000 <SUNetID>@sherlock.stanford.edu
 ```
-Then on any browser on your computer, go to [localhost:7000](localhost:7000)
+Then on any browser on your computer, go to [localhost:39000](localhost:39000)
 Note: Step 4 can take 5-10 minutes to start up (or faster), so continue to refresh if you don't see anything yet
 Once you see the login screen, you can log in with the credentials you inputted at step 3
 ## Step 5 : Configure CryoSPARC
@@ -204,4 +204,12 @@ Add two Key-Value pairs
 
 > Key = partition_requested | Value = cobarnes
 
-And you're done! Test out the functionality of the installation by processing with some small sample batch. Some things that haven't been written in yet: adding additional partitions/nodes, installations for using 3DFlex
+And you're done! Test out the functionality of the installation by processing with some small sample batch.
+
+## Step 6 : Submit Jobs
+For a given job, create and configure your job as needed. When you click "Queue Job" and you're given the option to modify the category "Queue to Lane"
+> Select "barnes-sherlock (cluster)"
+> Select the number of gpus and amount of time you will need
+> Click "Queue"
+
+Some things that haven't been written in yet: adding additional partitions/nodes, installations for using 3DFlex

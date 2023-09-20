@@ -3,8 +3,8 @@ Steps were derived from the [instructions](https://guide.cryosparc.com/setup-con
 
 ## Table of Contents
 
-[Basic Installation Steps]()
-[Adding Additional Parameters for the Submission Script]
+* [Basic Installation Steps](https://github.com/jnoh2/cryosparc-install/tree/main#basic-installation-steps)
+* [Adding Additional Parameters for the Submission Script](https://github.com/jnoh2/cryosparc-install/tree/main#adding-additional-parameters-for-the-submission-script)
 
 ## Basic Installation Steps
 ### Step 1 : Get a license number from CryoSPARC & port number to use for the lab

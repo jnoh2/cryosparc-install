@@ -98,15 +98,14 @@ cat <<EOF >  cluster_script.sh
 #
 #SBATCH -p cobarnes
 #SBATCH -N 1
-#SBATCH --nodelist=sh03-11n13
-#SBATCH -n {{ num_gpu*2 }}
+#SBATCH -n {{ cpu_requested }}
 #SBATCH --gpus={{ num_gpu }}
 #SBATCH --mem={{ (ram_gb*2)|int }}G
 #
 #SBATCH -t {{ time_requested }}
 #
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=$SUNETID@stanford.edu
+#SBATCH --mail-user={{ sunetid }}@stanford.edu
 
 echo "\$(date): job \$SLURM_JOBID starting on \$SLURM_NODELIST"
 echo
@@ -209,11 +208,15 @@ Once you see the login screen, you can log in with the credentials you inputted 
 ### Step 6 : Configure CryoSPARC
 1. Once logged in, go to admin (key symbol on the left)
 2. Go to Cluster Configuration Tab
-3. Add two Key-Value pairs
+3. Add a few Key-Value pairs, replacing \<SUNetID\> with your SUNetID
 
 > Key = time_requested | Value = 24:00:00
 
 > Key = partition_requested | Value = cobarnes
+
+> Key = cpu_requested | Value = 1
+
+> Key = sunetid | Value = \<SUNetID\>
 
 And you're done! Test out the functionality of the installation by processing with some small sample batch.
 
@@ -240,15 +243,14 @@ Suppose your `cluster_script.sh` file in your main cryosparc installation folder
 #
 #SBATCH -p cobarnes
 #SBATCH -N 1
-#SBATCH --nodelist=sh03-11n13
-#SBATCH -n {{ num_gpu*2 }}
+#SBATCH -n {{ cpu_requested }}
 #SBATCH --gpus={{ num_gpu }}
 #SBATCH --mem={{ (ram_gb*2)|int }}G
 #
 #SBATCH -t {{ time_requested }}
 #
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=$SUNETID@stanford.edu
+#SBATCH --mail-user={{ sunetid }}@stanford.edu
 
 echo "\$(date): job \$SLURM_JOBID starting on \$SLURM_NODELIST"
 echo
@@ -274,15 +276,14 @@ Replace where you want the text replacement for the parameter to go. In this exa
 #
 #SBATCH -p {{ partition_requested }}
 #SBATCH -N 1
-#SBATCH --nodelist=sh03-11n13
-#SBATCH -n {{ num_gpu*2 }}
+#SBATCH -n {{ cpu_requested }}
 #SBATCH --gpus={{ num_gpu }}
 #SBATCH --mem={{ (ram_gb*2)|int }}G
 #
 #SBATCH -t {{ time_requested }}
 #
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=$SUNETID@stanford.edu
+#SBATCH --mail-user={{ sunetid }}@stanford.edu
 
 echo "\$(date): job \$SLURM_JOBID starting on \$SLURM_NODELIST"
 echo

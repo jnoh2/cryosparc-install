@@ -309,7 +309,7 @@ cryosparcm cluster connect
 1. Go to your cryosparc GUI instance on your browser.
 2. Go to admin (key symbol on the left)
 3. Go to Cluster Configuration tab
-4. Add the Key-Value pair for which the "Key" is your parameter name WITHOUT curly braces and the "Value" should be the default for your parameter. In this example, you would add the following:
+4. Add the Key-Value pair for which the "Key" is your parameter name WITHOUT curly braces and spaces (i.e. `partition_requested`), and the "Value" should be the default for your parameter. In this example, you would add the following:
 > Key = partition_requested | Value = cobarnes
 
 Some things that haven't been written in yet: installations for using 3DFlex

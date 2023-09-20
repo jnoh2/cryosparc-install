@@ -223,7 +223,7 @@ And you're done! Test out the functionality of the installation by processing wi
 ### Step 7 : Submit Jobs
 For a given job, create and configure your job as needed. When you click "Queue Job" and you're given the option to modify the category "Queue to Lane"
 1. Select "barnes-sherlock (cluster)"
-2. Select the number of gpus and amount of time you will need
+2. Select the number of gpus, number of cpus (if using gpus, consider getting double the number of cpus as gpus), amount of time you will need and your SUNetID
 3. Click "Queue"
 
 ## Adding Additional Parameters for the Submission Script

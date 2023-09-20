@@ -230,7 +230,7 @@ For a given job, create and configure your job as needed. When you click "Queue 
 You may want to be able to adjust more parameters in the Sherlock job submission script. For example, you may want to use a different partition from what you're using. Here are the steps to adding more adjustable parameters for the submission script.
 
 ### Step 1 : Name the variable for which you want to make adjustable
-If you want to be able to adjust a certain parameter, come up with how you want to refer to it. In this example, we want to be able to adjust the partition we are using when we submit the job. We will call that parameter `{{ partition_requested }}`. Note, the curly braces and spacing is IMPORTANT!
+If you want to be able to adjust a certain parameter, come up with how you want to refer to it. In this example, we want to be able to adjust the partition we are using when we submit the job. We will call that parameter `{{ partition_requested }}`. Note, the curly braces and spacing is IMPORTANT! When you name your own parameter, you must keep the curly barces and spaces surrounding the actual text `partition_requested`
 
 ### Step 2 : Edit your submission script 
 Suppose your `cluster_script.sh` file in your main cryosparc installation folder looks like the following:

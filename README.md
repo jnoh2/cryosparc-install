@@ -146,6 +146,7 @@ cat <<EOF >  cs-master.sh
 _resubmit() {
     ## Resubmit the job for the next execution
     echo "$(date): job $SLURM_JOBID received SIGUSR1 at $(date), re-submitting"
+    cryosparcm stop
     sbatch $0
 }
 trap _resubmit SIGUSR1

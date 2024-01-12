@@ -108,7 +108,7 @@ cat <<EOF >  cluster_script.sh
 #SBATCH --output={{ job_log_path_abs }}
 #SBATCH --error={{ job_log_path_abs }}
 #
-#SBATCH --partition=normal
+#SBATCH --partition={{ partition_requested }}
 #SBATCH --nodes=1
 #SBATCH --ntasks={{ cpu_requested }}
 #SBATCH --gpus={{ num_gpu }}

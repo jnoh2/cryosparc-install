@@ -1,19 +1,23 @@
 # Installing CryoSPARC on Sherlock
-(Attribution: These instructions for installing CryoSPARC on Sherlock are a fork of the instructions developed and published by [jnoh2](https://github.com/jnoh2/cryosparc-install/blob/main/README.md). The instructions were originally derived from [CryoSPARC's](https://guide.cryosparc.com/setup-configuration-and-management/how-to-download-install-and-configure/downloading-and-installing-cryosparc) install instructions and a presentation by Zhiyong Zhang (Stanford Research Computing), with additional credit going to Haoqing Wang for advice & debugging, and to Josh Carter for testing.)
+(Attribution: These instructions for installing CryoSPARC on Sherlock are a fork of the instructions developed and published by [jnoh2](https://github.com/jnoh2/cryosparc-install/blob/main/README.md). The instructions were originally derived from [CryoSPARC's](https://guide.cryosparc.com/setup-configuration-and-management/how-to-download-install-and-configure/downloading-and-installing-cryosparc) install instructions and a presentation by Zhiyong Zhang (Stanford Research Computing), with additional credit going to Haoqing Wang for advice and debugging, and to Josh Carter for testing.)
 
 The following instructions were modified from their original form with a generic Sherlock user in mind who does not have access to a PI group partition or the `owners` partition.
 
 ## Table of Contents
-## Auto Installation
+## Automated Install 
+The automated installation takes the steps in the prescribed in the manual installation section and automates them with a bash script. While the script has been tested it is not necessarily robust in dealing with user entry errors. 
 ### Step 0: Before Installing
 Before starting the install, you need to obtain a CryoSPARC license. Fill out the download form on CryoSPARC's [website](https://cryosparc.com/download), and select the option that best describes your use case. For most Sherlock users the "I am an academic user carrying out non-profit academic reasearch at a university or educational/research." option will suffice. CryoSPARC will send you an email containing the license number within 24 hours.
 
-### Step 1: Running Install Script
+### Step 1: Run Install Script
 Download the current release of this directory in your home directory.
 ```
 cd $HOME
+curl -L https://github.com/chris-hypercag/cemc-cryosparc-sherlock-install/releases/download/v0.0.1/cemc-cryosparc-sherlock-install.tar.gz
+tar -zxvf cemc-cryosparc-sherlock-install.tar.gz
 ```
-Start an interactive job session
+Next, collect the following information: your CryoSPARC license number, your first and last name, and a password for your CryoSPARC account. You can also choose a   
+Start an interactive job session, here we are asking for 4 cpu's 1 gpu for two hours. 
 ```
 $ sh_dev -c 4 -g 1 -t 02:00:00
 ```

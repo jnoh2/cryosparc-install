@@ -178,8 +178,15 @@ Connect CryoSPARC to the cluster
 cd $CS_PATH/cryosparc_master
 ./bin/cryosparcm cluster connect
 ```
-### Step 3 : Start the CryoSPARC GUI
-The max time for a Sherlock job is 7 days. This code will start a job that will resubmit a job every 7 days to restart your CryoSPARC GUI. If you start a job that doesn't finish before the GUI restarts, it'll probably be cancled. I would honestly recommend canceling this job submission each time you're done for the day and resubmit the above code block each time you want to start working again.
+
+At this point CryoSPARC is installed and both the master and worker instances are configured. To clean up, stop the cryosparc master instance started earlier in the setup and exit sh_dev mode
+```
+./bin/cryosparcm stop
+exit
+```
+
+## Start the CryoSPARC GUI
+The max time for a Sherlock job is 7 days. This code will start a job that will resubmit a job every 7 days to restart your CryoSPARC GUI. If you start a job that doesn't finish before the GUI restarts, it'll probably be canceled. I would honestly recommend canceling this job submission each time you're done for the day and resubmit the above code block each time you want to start working again.
 ```
 sbatch cs-master.sh
 ```
@@ -189,27 +196,23 @@ scancel -n cs-master
 ```
 To check if your job has started
 ```
-squeue -u $SUNETID
+squeue -u $USER
 ```
 ### Step 4 : Connect to the CryoSPARC GUI
-Terminate the screen
-```
-exit
-```
 Exit the dev mode
 ```
 exit
 ```
-Then, on your own separate terminal (NOT Sherlock), replacing \<SUNetID\> with your SUNetID (this should be similar to logging on to Sherlock) and \<PORTNum\> with your Port Number
+Then, on your own separate terminal (NOT Sherlock), replacing \<SUNetID\> with your SUNetID (this should be similar to logging on to Sherlock)
 ```
-ssh -XYNfL \<PORTNum\>:sh03-11n13:\<PORTNum\> <SUNetID>@sherlock.stanford.edu
+ssh -XYNfL 39000:shXX-XXnXX:39000 <SUNetID>@sherlock.stanford.edu
 ```
-Then on any browser on your computer, go to the following url, replacing \<PORTNum\> with your Port Number
+Then on any browser on your computer, go to the following url, 
 ```
-localhost:<PORTNum>
+localhost:39000
 ```
 Note: Step 4 can take 5-10 minutes to start up (or faster), so continue to refresh if you don't see anything yet
-Once you see the login screen, you can log in with the credentials you inputted at step 3
+Once you see the login screen, you can log in with the credentials you input at step 2
 ### Step 5 : Configure CryoSPARC
 1. Once logged in, go to admin (key symbol on the left)
 2. Go to Cluster Configuration Tab

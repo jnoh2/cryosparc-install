@@ -207,14 +207,16 @@ Exit the dev mode
 ```
 exit
 ```
-Then, on your own separate terminal (NOT Sherlock), replacing \<SUNetID\> with your SUNetID (this should be similar to logging on to Sherlock)
+Open a separate terminal on your computer. In the new terminal execute the following command to enable port forwarding from Sherlock, replacing \<SUNetID\> with your SUNetID, 
 ```
-ssh -XYNfL 39000:shXX-XXnXX:39000 <SUNetID>@sherlock.stanford.edu
+ssh -NfL 39000:shXX-XXnXX:39000 <SUNetID>@sherlock.stanford.edu
 ```
 Then on any browser on your computer, go to the following url, 
 ```
 localhost:39000
 ```
+If the browser is unable to connect, try closing and reopening it. 
+
 Note: Step 4 can take 5-10 minutes to start up (or faster), so continue to refresh if you don't see anything yet
 Once you see the login screen, you can log in with the credentials you input at step 2
 ### Step 5 : Configure CryoSPARC

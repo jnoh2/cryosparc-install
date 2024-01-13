@@ -200,7 +200,7 @@ scancel -n cs-master
 ```
 To check if your job has started
 ```
-squeue -u $USER
+squeue --me
 ```
 ### Step 4 : Connect to the CryoSPARC GUI
 Exit the dev mode

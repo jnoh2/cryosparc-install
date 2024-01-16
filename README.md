@@ -1,7 +1,7 @@
 # Installing CryoSPARC on Sherlock
 (Attribution: These instructions for installing CryoSPARC on Sherlock are a fork of the instructions developed and published by [jnoh2](https://github.com/jnoh2/cryosparc-install/blob/main/README.md). The instructions were originally derived from [CryoSPARC's](https://guide.cryosparc.com/setup-configuration-and-management/how-to-download-install-and-configure/downloading-and-installing-cryosparc) install instructions and a presentation by Zhiyong Zhang (Stanford Research Computing), with additional credit going to Haoqing Wang for advice and debugging, and to Josh Carter for testing.)
 
-The following instructions were modified from their original form with a generic Sherlock user in mind who does not have access to a PI group partition or the `owners` partition.
+The following instructions were modified from their original form with a generic Sherlock user in mind who does not have access to a PI group partition or the owners partition.
 
 ## Table of Contents
 ## Automated Install 
@@ -70,7 +70,7 @@ Start the CryoSPARC master instance
 ```
 ./bin/cryosparcm start
 ```
-Create your CryoSPARC login credentials. Replace each of the five fields in between the quotation marks with your own information.
+Create your CryoSPARC login credentials. Replace each of the five fields in between with your own details---keep the quotation marks when entering with your information but remove the brackets, for example `--email "jane@stanford.edu"`
 ```
 ./bin/cryosparcm createuser --email "<e-mail>" --password "<password>" --username "<username>" --firstname "<firstname>" --lastname "<lastname>"
 ```
@@ -82,7 +82,8 @@ ml cuda/11.7.1
 ./bin/cryosparcw connect --worker <hostname> --master <hostname> --port $PORT_NUM --nossd
 cd $CS_PATH
 ```
-Prepare to connect master to worker. Copy and paste three following blocks of code
+### Step 3: Create Submission Scripts
+Next, prepare to connect the master instance to the worker instance. For this you will need the files `cluster_info.json`, `cluster_script.sh`, and `cs-master.sh`. Copy and paste the following code blocks into the terminal. Clicking the copy icon in the upper right hand corner of the code block will insure the entire field is copied. The `cat` command will automatically concatenate the lines in between it and marker (EOF) and pass it to file named `cluster_info.json`. 
 ```
 cat <<EOF >  cluster_info.json
 {
@@ -90,7 +91,7 @@ cat <<EOF >  cluster_info.json
     "worker_bin_path" : "$CS_PATH/cryosparc_worker/bin/cryosparcw",
     "cache_path" : "$L_SCRATCH",
     "cache_reserve_mb" : 10000,
-    "cache_quota_mb": 1000000,
+    "cache_quota_mb": 500000,
     "send_cmd_tpl" : "{{ command }}",
     "qsub_cmd_tpl" : "sbatch {{ script_path_abs }}",
     "qstat_cmd_tpl" : "squeue -j {{ cluster_job_id }}",
@@ -98,8 +99,8 @@ cat <<EOF >  cluster_info.json
     "qinfo_cmd_tpl" : "sinfo",
 }
 EOF
-
 ```
+Copy and paste the following code block to create `cluster_script.sh`. This script provides a template to CryoSPARC for submitting worker jobs.
 ```
 cat <<EOF >  cluster_script.sh
 #!/bin/bash
@@ -131,6 +132,7 @@ echo "Finished cryosparc worker job"
 EOF
 
 ```
+Copy and paste the following code block to create `cs-master.sh`. This script with start and restart the CryoSPARC master instance.
 ```
 cat <<EOF >  cs-master.sh
 #!/bin/bash
@@ -175,41 +177,48 @@ while true; do
     sleep 300
 done
 EOF
-
 ```
-Connect CryoSPARC to the cluster
+
+### Step 4: Finalizing the master instance connection, and Clean Up 
+Last step, connect CryoSPARC to the cluster
 ```
 cd $CS_PATH/cryosparc_master
 ./bin/cryosparcm cluster connect
 ```
-
-At this point CryoSPARC is installed and both the master and worker instances are configured. To clean up, stop the cryosparc master instance started earlier in the setup and exit sh_dev mode
+At this point and both the master and worker instances are configured. 
+To clean up, stop the cryosparc master instance started earlier in the setup and exit sh_dev mode.
 ```
 ./bin/cryosparcm stop
 exit
 ```
 
 ## Start the CryoSPARC GUI
-The max time for a Sherlock job is 7 days. This code will start a job that will resubmit a job every 7 days to restart your CryoSPARC GUI. If you start a job that doesn't finish before the GUI restarts, it'll probably be canceled. I would honestly recommend canceling this job submission each time you're done for the day and resubmit the above code block each time you want to start working again.
+The max runtime for a job on Sherlock 7 days. The `_resubmit()` function in `cs-master.sh` automatically requeues the CryoSPARC master instance when the time limit is reached. If a worker job doesn't finish before the 7 day time limit, the worker job will mostly likely terminate itself.  
+
+It is highly recommended you cancel the master instance each time you are done for the day and resubmit the job when you want to start working again. This helps free up Sherlock resources for other users and keeps your fairshare score from depleting. Your fairshare score is an important metric when running in the normal partition; it effects how long slurm will hold your job before allocating it resources. The higher your fairshare score, the faster your job will get through the queue. You can prevent unnecessary depletion of your fairshare score by requesting the minimum number of resources (cpus, memory, runtime) needed to run the master and worker jobs.
+
+To submit the master job to the queue run the following command from your CryoSPARC directory containing `cs-master.sh`
 ```
 sbatch cs-master.sh
-```
-To cancel the job when you're done
-```
-scancel -n cs-master
 ```
 To check if your job has started
 ```
 squeue --me
 ```
-### Step 4 : Connect to the CryoSPARC GUI
-Exit the dev mode
+To cancel the job when you're done
 ```
-exit
+scancel -n cs-master
 ```
-Open a separate terminal on your computer. In the new terminal execute the following command to enable port forwarding from Sherlock, replacing \<SUNetID\> with your SUNetID, 
+When `squeue --me` shows that the master instance has started running, or if you get an email informing you that the job has began, cat the job output file from the same directory
 ```
-ssh -NfL 39000:shXX-XXnXX:39000 <SUNetID>@sherlock.stanford.edu
+cat cs-master.out.<JobID>
+```
+If CryoSPARC has fully booted up, it will print the hostname of the node the master instance is running on. The hostname has the format `sh##-##n##`. Copy this hostname for the next step. 
+
+### Connect to the CryoSPARC GUI
+Now open a separate terminal on your computer. In the new terminal execute the following command to enable port forwarding from Sherlock, replacing sh##-##n## with the hostname, and \<SUNetID\> with your SUNetID, 
+```
+ssh -NfL 39000:sh##-##n##>:39000 <SUNetID>@sherlock.stanford.edu
 ```
 Then on any browser on your computer, go to the following url, 
 ```
@@ -217,113 +226,41 @@ localhost:39000
 ```
 If the browser is unable to connect, try closing and reopening it. 
 
-Note: Step 4 can take 5-10 minutes to start up (or faster), so continue to refresh if you don't see anything yet
-Once you see the login screen, you can log in with the credentials you input at step 2
-### Step 5 : Configure CryoSPARC
+Once you see the login screen, you can log in with the credentials you chose in step 2.
+
+### Configure CryoSPARC
 1. Once logged in, go to admin (key symbol on the left)
 2. Go to Cluster Configuration Tab
 3. Add a few Key-Value pairs, replacing \<SUNetID\> with your SUNetID
 
-> Key = time_requested | Value = 24:00:00
+- Key = time_requested | Value = 24:00:00
+- Key = partition_requested | Value = normal
+- Key = cpu_requested | Value = 1
+- Key = sunetid | Value = \<SUNetID\>
 
-> Key = partition_requested | Value = cobarnes
-
-> Key = cpu_requested | Value = 1
-
-> Key = sunetid | Value = \<SUNetID\>
-
-And you're done! Test out the functionality of the installation by processing with some small sample batch.
-
-### Step 6 : Submit Jobs
+### Submit Jobs
 For a given job, create and configure your job as needed. When you click "Queue Job" and you're given the option to modify the category "Queue to Lane"
-1. Select "barnes-sherlock (cluster)"
+1. Select "normal-sherlock"
 2. Select the number of gpus, number of cpus (if using gpus, consider getting double the number of cpus as gpus), amount of time you will need and your SUNetID
 3. Click "Queue"
 
 ## Adding Additional Parameters for the Submission Script
-You may want to be able to adjust more parameters in the Sherlock job submission script. For example, you may want to use a different partition from what you're using. Here are the steps to adding more adjustable parameters for the submission script.
+You may want to be able to adjust more parameters in the Sherlock job submission script. 
 
-### Step 1 : Name the variable for which you want to make adjustable
-If you want to be able to adjust a certain parameter, come up with how you want to refer to it. In this example, we want to be able to adjust the partition we are using when we submit the job. We will call that parameter `{{ partition_requested }}`. Note, the curly braces and spacing is IMPORTANT! When you name your own parameter, you must keep the curly barces and spaces surrounding the actual text `partition_requested`
+### Step 1 : Name the variable for you want to modify
+If you want to adjust certain hardcoded sbatch or bash parameters in your submission scripts from within CryoSPARC you can do so by adding Key-Value pairs in the cluster configuation tab. First come up with a unique variable name for the parameter you wish to modify.  For example, the `#SBATCH --partition=` parameter can be modified by declaring a `{{ partition_requested }}` variable name, as seen in `cluster_script.sh`. 
 
 ### Step 2 : Edit your submission script 
-Suppose your `cluster_script.sh` file in your main cryosparc installation folder looks like the following:
-```
-#!/bin/bash
-#
-#SBATCH --job-name=cs-{{ project_uid }}-{{ job_uid }}
-#SBATCH --output={{ job_log_path_abs }}
-#SBATCH --error={{ job_log_path_abs }}
-#
-#SBATCH -p cobarnes
-#SBATCH -N 1
-#SBATCH -n {{ cpu_requested }}
-#SBATCH --gpus={{ num_gpu }}
-#SBATCH --mem={{ (ram_gb*2)|int }}G
-#
-#SBATCH -t {{ time_requested }}
-#
-#SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user={{ sunetid }}@stanford.edu
+Within your scripts add the new parameter or replace the hardcoded value of a preexisting parameter with your variable name. When using your own variable in scripts, you must keep the curly braces and spaces surrounding the actual variable name. In CryoSPARC, the curly braces and spacing identify `partition_requested` as a variable.
 
-echo "\$(date): job \$SLURM_JOBID starting on \$SLURM_NODELIST"
-echo
-
-ml cuda/11.7.1
-
-echo
-echo "Starting cryosparc worker job"
-echo
-
-{{ run_cmd }}
-
-echo "Finished cryosparc worker job"
-echo
-```
-Replace where you want the text replacement for the parameter to go. In this example, we want `cobarnes` replaced with our variable of choice, `{{ partition_requested }}`. After replacement, `cluster_script.sh` should now look like this:
-```
-#!/bin/bash
-#
-#SBATCH --job-name=cs-{{ project_uid }}-{{ job_uid }}
-#SBATCH --output={{ job_log_path_abs }}
-#SBATCH --error={{ job_log_path_abs }}
-#
-#SBATCH -p {{ partition_requested }}
-#SBATCH -N 1
-#SBATCH -n {{ cpu_requested }}
-#SBATCH --gpus={{ num_gpu }}
-#SBATCH --mem={{ (ram_gb*2)|int }}G
-#
-#SBATCH -t {{ time_requested }}
-#
-#SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user={{ sunetid }}@stanford.edu
-
-echo "\$(date): job \$SLURM_JOBID starting on \$SLURM_NODELIST"
-echo
-
-ml cuda/11.7.1
-
-echo
-echo "Starting cryosparc worker job"
-echo
-
-{{ run_cmd }}
-
-echo "Finished cryosparc worker job"
-echo
-```
-Note the change on line 7
 ### Step 3 : Connect the new job submission script to CryoSPARC
 Make sure you are in the directory that contains `cluster_script.sh` and `cluster_info.json`. Then enter the following:
 ```
 cryosparcm cluster connect
 ```
 ### Step 4 : Indicate the use of the parameter on the CryoSPARC GUI
-1. Go to your cryosparc GUI instance on your browser.
+1. Go to your CryoSPARC master instance on your browser.
 2. Go to admin (key symbol on the left)
 3. Go to Cluster Configuration tab
-4. Add the Key-Value pair for which the "Key" is your parameter name WITHOUT curly braces and spaces (i.e. `partition_requested`), and the "Value" should be the default for your parameter. In this example, you would add the following:
-> Key = partition_requested | Value = cobarnes
-
-Some things that haven't been written in yet: installations for using 3DFlex
+4. Add the Key-Value pair for which the "Key" is your variable name WITHOUT curly braces and spaces (i.e. `partition_requested`), and the "Value" should be the default for your parameter. In this example, you would add the following:
+- Key = partition_requested | Value = normal

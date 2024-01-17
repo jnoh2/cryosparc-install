@@ -4,23 +4,7 @@
 The following instructions were modified from their original form with a generic Sherlock user in mind who does not have access to a PI group partition or the owners partition.
 
 ## Table of Contents
-## Automated Install 
-The automated installation takes the steps in the prescribed in the manual installation section and automates them with a bash script. While the script has been tested it is not necessarily robust in dealing with user entry errors. 
-### Step 0: Before Installing
-Before starting the install, you need to obtain a CryoSPARC license. Fill out the download form on CryoSPARC's [website](https://cryosparc.com/download), and select the option that best describes your use case. For most Sherlock users the "I am an academic user carrying out non-profit academic reasearch at a university or educational/research." option will suffice. CryoSPARC will send you an email containing the license number within 24 hours.
 
-### Step 1: Run Install Script
-Download the current release of this directory in your home directory.
-```
-cd $HOME
-curl -L https://github.com/chris-hypercag/cemc-cryosparc-sherlock-install/releases/download/v0.0.1/cemc-cryosparc-sherlock-install.tar.gz
-tar -zxvf cemc-cryosparc-sherlock-install.tar.gz
-```
-Next, collect the following information: your CryoSPARC license number, your first and last name, and a password for your CryoSPARC account. You can also choose a   
-Start an interactive job session, here we are asking for 4 cpu's 1 gpu for two hours. 
-```
-$ sh_dev -c 4 -g 1 -t 02:00:00
-```
 
 
 ## Manual Installation Steps
@@ -87,7 +71,7 @@ Next, prepare to connect the master instance to the worker instance. For this yo
 ```
 cat <<EOF >  cluster_info.json
 {
-    "name" : "normal-sherlock",
+    "name" : "generic-sherlock",
     "worker_bin_path" : "$CS_PATH/cryosparc_worker/bin/cryosparcw",
     "cache_path" : "$L_SCRATCH",
     "cache_reserve_mb" : 10000,
@@ -132,7 +116,7 @@ echo "Finished cryosparc worker job"
 EOF
 
 ```
-Copy and paste the following code block to create `cs-master.sh`. This script with start and restart the CryoSPARC master instance.
+Copy and paste the following code block to create `cs-master.sh`. This script will start and restart the CryoSPARC master instance.
 ```
 cat <<EOF >  cs-master.sh
 #!/bin/bash
@@ -158,7 +142,8 @@ cat <<EOF >  cs-master.sh
 _resubmit() {
     ## Resubmit the job for the next execution
     echo "\$(date): job \$SLURM_JOBID received SIGUSR1 at \$(date), re-submitting"
-    ./cryosparc_master/bin/cryosparcm stop
+    date -R >> $CS_PATH/cs-master.log
+    ./cryosparc_master/bin/cryosparcm stop >> $CS_PATH/cs-master.log
     sbatch \$0
 }
 trap _resubmit SIGUSR1
@@ -167,15 +152,13 @@ cd $CS_PATH
 
 echo "Loading cryosparc GUI"
 
-./cryosparc_master/bin/cryosparcm start
+date -R >> $CS_PATH/cs-master.log
+./cryosparc_master/bin/cryosparcm restart >> $CS_PATH/cs-master.log
 
 echo "Loaded cryosparc GUI"
 
 echo "\$(date): job \$SLURM_JOBID starting on \$SLURM_NODELIST"
-while true; do
-    echo "\$(date): normal execution"
-    sleep 300
-done
+
 EOF
 ```
 
@@ -201,22 +184,18 @@ To submit the master job to the queue run the following command from your CryoSP
 ```
 sbatch cs-master.sh
 ```
-To check if your job has started
-```
-squeue --me
-```
 To cancel the job when you're done
 ```
 scancel -n cs-master
 ```
-When `squeue --me` shows that the master instance has started running, or if you get an email informing you that the job has began, cat the job output file from the same directory
+To check if your job has started
 ```
-cat cs-master.out.<JobID>
+squeue --me
 ```
-If CryoSPARC has fully booted up, it will print the hostname of the node the master instance is running on. The hostname has the format `sh##-##n##`. Copy this hostname for the next step. 
+When the master instance is running, `squeue --me` will also output the hostname of the master node under NODELIST. The hostname has the format `sh##-##n##`. Copy this hostname for the next step.
 
 ### Connect to the CryoSPARC GUI
-Now open a separate terminal on your computer. In the new terminal execute the following command to enable port forwarding from Sherlock, replacing sh##-##n## with the hostname, and \<SUNetID\> with your SUNetID, 
+Now open a separate terminal on your computer. In the new terminal execute the following command to enable port forwarding, replacing sh##-##n## with the hostname, and \<SUNetID\> with your SUNetID, 
 ```
 ssh -NfL 39000:sh##-##n##>:39000 <SUNetID>@sherlock.stanford.edu
 ```
@@ -224,9 +203,17 @@ Then on any browser on your computer, go to the following url,
 ```
 localhost:39000
 ```
-If the browser is unable to connect, try closing and reopening it. 
-
 Once you see the login screen, you can log in with the credentials you chose in step 2.
+
+Note: If the browser is unable to connect, the port may need to be reset. First find the PID number of the open port.
+```
+lsof -i:39000
+```
+Copy the PID number, and kill the process directly
+```
+kill -9 <PID>
+```
+Now try rerunning the port forwarding command. If the previous steps don't reset the port, try closing and reopening your browser.
 
 ### Configure CryoSPARC
 1. Once logged in, go to admin (key symbol on the left)
@@ -240,7 +227,7 @@ Once you see the login screen, you can log in with the credentials you chose in 
 
 ### Submit Jobs
 For a given job, create and configure your job as needed. When you click "Queue Job" and you're given the option to modify the category "Queue to Lane"
-1. Select "normal-sherlock"
+1. Select "sherlock"
 2. Select the number of gpus, number of cpus (if using gpus, consider getting double the number of cpus as gpus), amount of time you will need and your SUNetID
 3. Click "Queue"
 

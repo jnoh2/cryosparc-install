@@ -1,0 +1,3 @@
+cmake -DTIFF_INCLUDE_DIR=/share/software/user/open/libtiff/4.4.0/include -DTIFF_LIBRARY=/share/software/user/open/libtiff/4.4.0/lib/libtiff.so.5 -DFORCE_OWN_FFTW=ON -DAMDFFTW=ON ..
+
+cmake -DTIFF_INCLUDE_DIR=/share/software/user/open/libtiff/4.4.0/include -DTIFF_LIBRARY=/share/software/user/open/libtiff/4.4.0/lib/libtiff.so.5 -X11_X11_INCLUDE_PATH=/share/software/user/open/x11/7.7/include -X11_X11_LIB=/share/software/user/open/x11/7.7/lib/libX11.so.6 -DFORCE_OWN_FFTW=ON -DAMDFFTW=ON ..

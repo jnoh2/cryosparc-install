@@ -1,0 +1,8 @@
+ml x11/7.7 system libtiff/4.0.8 cuda/11.5.0 openmpi/4.1.2 fftw/3.3.10 system openjpeg/2.3.1 fltk/1.3.4 cmake/3.20.3
+
+# Was it cuda 11.5.0?
+# CMAKE must be last or it won't detect x11 libs
+# Haoqing recomemended:
+#   devel
+#   cups/2.2.4
+#   libfabric/1.6.0

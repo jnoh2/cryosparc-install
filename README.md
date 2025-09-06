@@ -5,6 +5,7 @@ Steps were derived from the [instructions](https://guide.cryosparc.com/setup-con
 
 * [Basic Installation Steps](https://github.com/jnoh2/cryosparc-install/tree/main#basic-installation-steps)
 * [Adding Additional Parameters for the Submission Script](https://github.com/jnoh2/cryosparc-install/tree/main#adding-additional-parameters-for-the-submission-script)
+* [Storage Management](https://github.com/jnoh2/cryosparc-install/tree/main#storage-management)
 
 ## Basic Installation Steps
 ### Step 1 : Get a license number from CryoSPARC & port number to use for the lab
@@ -314,3 +315,6 @@ cryosparcm cluster connect
 > Key = partition_requested | Value = cobarnes
 
 Some things that haven't been written in yet: installations for using 3DFlex
+
+## Storage Management
+Two key concepts are that cryosparc will not release storage unless 

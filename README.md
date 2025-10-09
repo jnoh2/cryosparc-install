@@ -317,27 +317,78 @@ cryosparcm cluster connect
 Some things that haven't been written in yet: installations for using 3DFlex
 
 ## Storage Management
-### Step 1 : Let users know not to use CryoSPARC or do any related activities
-### Step 2 : Ensure sufficient space at group home to ensure some degree of read/write possible
-### Step 3 : Ensure master node is running
-### Step 4 : Turn on maintenance mode
+1. Let users know not to use CryoSPARC or do any related activities
+2. Ensure sufficient space at group home (enough for some degree of read/write possible)
+3. Ensure master node is running with sufficient job time left
+4. Turn on maintenance mode
 ```
 cryosparcm maintenancemode on
 ```
-### Step 5 : Ensure no more jobs running or submitted
-### Step 6 : Detach and/or delete any unncessary projects
-### Step 7 : Remove detached projects from the database. This should not affect the project folder itself
-### Step 8 : Backup into a scratch directory, then note its size
+5. Add a message of the day to indicate the change
+```
+cryosparcm cli "set_instance_banner(True, 'Maintenance Mode On', 'Memory is being managed; please do not do any work here at the moment')"
+```
+6. Ensure no more jobs running or submitted
+7. Detach and/or delete any unncessary projects
+8. Remove detached projects from the database. This should not affect the project folder itself
+9. Backup into a scratch directory, then note its size
 ```
 TEMP_CS_DIR_BACKUP="/scratch/users/jnoh2/cs-temp-backup"
 cryosparcm backup --dir="$TEMP_CS_DIR_BACKUP"
 ```
-### Step 9 : Note the size of the original cryosparc instance
-### Step 10 : Run compaction through MongoDB
+9. Note the size of the original cryosparc instance
+10. Run compaction through MongoDB
 ```
 cryosparcm restart
 cryosparcm compact
 ```
-### Step 11 : Note the size of the new cryosparc instance and compare to the backup + original sizes
-### Step 12 : Store a backup copy in group_home
-### Step 13 : Turn maintenance mode off
+11. Note the size of the new cryosparc instance and compare to the backup + original sizes
+12. Store a backup copy in group_home
+13. Turn maintenance mode off
+```
+cryosparcm maintenancemode off
+```
+14. Turn message of the day off
+```
+cryosparcm cli "set_instance_banner(False)"
+```
+15. Let users know to check for integrity of their projects
+
+## Updating versions
+1. Let users know not to use CryoSPARC or do any related activities
+2. Ensure sufficient space at group home (~10 Gb)
+3. Ensure master node is running with sufficient job time left
+4. Turn on maintenance mode
+```
+cryosparcm maintenancemode on
+```
+5. Add a message of the day to indicate the change
+```
+cryosparcm cli "set_instance_banner(True, 'Maintenance Mode On', 'CryoSPARC is being updated; please do not use')"
+```
+6. Ensure no more jobs running or submitted
+7. Backup into a scratch directory
+```
+TEMP_CS_DIR_BACKUP="/scratch/users/jnoh2/cs-temp-backup"
+cryosparcm backup --dir="$TEMP_CS_DIR_BACKUP"
+```
+8. Carry out a complete shutdown
+```
+cryosparcm stop
+ps -weo pid,ppid,start,cmd | grep -e cryosparc -e mongo | grep -v grep
+```
+The ps command may yield zombie cryosparc processes. Kill the process that has "supervisord" in its process name.
+9. Confirm complete shutdown
+```
+ps -weo pid,ppid,start,cmd | grep -e cryosparc -e mongo | grep -v grep
+cryosparcm status
+```
+10. Check for updates
+```
+cryosparcm update --check
+```
+11. If there are updates, go to the folder with the cryosparc installation and copy master and worker tar files into archive
+12. Run the update
+```
+cryosparcm update
+```

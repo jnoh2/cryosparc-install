@@ -334,13 +334,13 @@ cryosparcm cli "set_instance_banner(True, 'Maintenance Mode On', 'Memory is bein
 9. Backup into a scratch directory, then note its size
 ```
 TEMP_CS_DIR_BACKUP="/scratch/users/jnoh2/cs-temp-backup"
-cryosparcm backup --dir="$TEMP_CS_DIR_BACKUP"
+cryosparcm backup --dir="$TEMP_CS_DIR_BACKUP" #Run this as a job
 ```
 9. Note the size of the original cryosparc instance
 10. Run compaction through MongoDB
 ```
 cryosparcm restart
-cryosparcm compact
+cryosparcm compact #Run this as a job
 ```
 11. Note the size of the new cryosparc instance and compare to the backup + original sizes
 12. Store a backup copy in group_home
@@ -370,7 +370,7 @@ cryosparcm cli "set_instance_banner(True, 'Maintenance Mode On', 'CryoSPARC is b
 7. Backup into a scratch directory
 ```
 TEMP_CS_DIR_BACKUP="/scratch/users/jnoh2/cs-temp-backup"
-cryosparcm backup --dir="$TEMP_CS_DIR_BACKUP"
+cryosparcm backup --dir="$TEMP_CS_DIR_BACKUP" #Run this as a job
 ```
 8. Carry out a complete shutdown. If the ps command yields zombie cryosparc processes, kill the process that has "supervisord" in its process name.
 ```
@@ -389,5 +389,5 @@ cryosparcm update --check
 11. If there are updates, go to the folder with the cryosparc installation and copy master and worker tar files into archive
 12. Run the update
 ```
-cryosparcm update
+cryosparcm update #Run this as a job
 ```

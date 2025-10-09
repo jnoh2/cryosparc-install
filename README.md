@@ -317,4 +317,27 @@ cryosparcm cluster connect
 Some things that haven't been written in yet: installations for using 3DFlex
 
 ## Storage Management
-Two key concepts are that cryosparc will not release storage unless 
+### Step 1 : Let users know not to use CryoSPARC or do any related activities
+### Step 2 : Ensure sufficient space at group home to ensure some degree of read/write possible
+### Step 3 : Ensure master node is running
+### Step 4 : Turn on maintenance mode
+```
+cryosparcm maintenancemode on
+```
+### Step 5 : Ensure no more jobs running or submitted
+### Step 6 : Detach and/or delete any unncessary projects
+### Step 7 : Remove detached projects from the database. This should not affect the project folder itself
+### Step 8 : Backup into a scratch directory, then note its size
+```
+TEMP_CS_DIR_BACKUP="/scratch/users/jnoh2/cs-temp-backup"
+cryosparcm backup --dir="$TEMP_CS_DIR_BACKUP"
+```
+### Step 9 : Note the size of the original cryosparc instance
+### Step 10 : Run compaction through MongoDB
+```
+cryosparcm restart
+cryosparcm compact
+```
+### Step 11 : Note the size of the new cryosparc instance and compare to the backup + original sizes
+### Step 12 : Store a backup copy in group_home
+### Step 13 : Turn maintenance mode off

@@ -372,12 +372,11 @@ cryosparcm cli "set_instance_banner(True, 'Maintenance Mode On', 'CryoSPARC is b
 TEMP_CS_DIR_BACKUP="/scratch/users/jnoh2/cs-temp-backup"
 cryosparcm backup --dir="$TEMP_CS_DIR_BACKUP"
 ```
-8. Carry out a complete shutdown
+8. Carry out a complete shutdown. If the ps command yields zombie cryosparc processes, kill the process that has "supervisord" in its process name.
 ```
 cryosparcm stop
 ps -weo pid,ppid,start,cmd | grep -e cryosparc -e mongo | grep -v grep
 ```
-The ps command may yield zombie cryosparc processes. Kill the process that has "supervisord" in its process name.
 9. Confirm complete shutdown
 ```
 ps -weo pid,ppid,start,cmd | grep -e cryosparc -e mongo | grep -v grep

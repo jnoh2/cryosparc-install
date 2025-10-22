@@ -391,3 +391,7 @@ cryosparcm update --check
 ```
 cryosparcm update #Run this as a job
 ```
+13. Once complete, turn message of the day off
+```
+cryosparcm cli "set_instance_banner(False)"
+```

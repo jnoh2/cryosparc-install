@@ -391,7 +391,16 @@ cryosparcm update --check
 ```
 cryosparcm update #Run this as a job
 ```
-13. Once complete, turn message of the day off
+13. After verifying that master node update was okay, first shutdown all instances of cryosparc and its jobs
+14. At the worker node folder, make sure there is a new tar.gz file. Submit a job to run
+```
+bin/cryosparcw update
+```
+15. Once complete, turn maintenance mode off
+```
+cryosparcm maintenancemode off
+```
+16. Turn message of the day off
 ```
 cryosparcm cli "set_instance_banner(False)"
 ```

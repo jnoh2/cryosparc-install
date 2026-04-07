@@ -352,15 +352,26 @@ cryosparcm compact #Run this as a job
 ```
 11. Note the size of the new cryosparc instance and compare to the backup + original sizes
 12. Store a backup copy in group_home
-13. Turn maintenance mode off
+13. Note that if the compaction doesn't work, but backup size is much smaller, it may be better to restore to the back up to save space
+```
+# First, turn cryosparc off
+# Make sure you have a long enough master node job such that you will override the database path during config setting (or turn it off)
+# Then, rename the DB path to the one you want (may want to edit both the actual config file and the template)
+cryosparcm restore --file="/scratch/users/jnoh2/cs-backups/cryosparc_backup_2026_04_07_10h06.archive"
+
+# Check the size of the new cryosparc instance and compare to backup + original sizes
+# If the size is better, then confirm that the new database is safe
+# If the database is safe, move the database to somewhere new and edit the config and tempalte both
+```
+14. Turn maintenance mode off
 ```
 cryosparcm maintenancemode off
 ```
-14. Turn message of the day off
+15. Turn message of the day off
 ```
 cryosparcm cli "set_instance_banner(False)"
 ```
-15. Let users know to check for integrity of their projects
+16. Let users know to check for integrity of their projects
 
 ## Updating versions
 1. Let users know not to use CryoSPARC or do any related activities

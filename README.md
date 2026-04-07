@@ -329,12 +329,12 @@ cryosparcm maintenancemode on
 cryosparcm cli "set_instance_banner(True, 'Maintenance Mode On', 'Memory is being managed; please do not do any work here at the moment')"
 ```
 6. Ensure no more jobs running or submitted
-7a. Detach and/or delete any unncessary projects
-7b. If there are issues with the lock.cs file or the folder doesn't exist at all
+7. Detach and/or delete any unncessary projects
 ```
-### If it's just a lock file issue:
+### If there's a lock file issue:
 cryosparcm cli "take_over_project(project_uid='P124')"
 cryosparcm cli "delete_project(project_uid = 'P124')"
+
 ### If the folder is now gone entirely
 cryosparcm icli
 db.projects.update_one({'uid':'P124'}, {'$set': {'deleted':True}})

@@ -329,7 +329,7 @@ cryosparcm maintenancemode on
 cryosparcm cli "set_instance_banner(True, 'Maintenance Mode On', 'Memory is being managed; please do not do any work here at the moment')"
 ```
 6. Ensure no more jobs running or submitted
-7. Detach and/or delete any unncessary projects
+7. Delete any unncessary projects, including detached projects
 ```
 ### If there's a lock file issue:
 cryosparcm cli "take_over_project(project_uid='P124')"
@@ -339,29 +339,28 @@ cryosparcm cli "delete_project(project_uid = 'P124')"
 cryosparcm icli
 db.projects.update_one({'uid':'P124'}, {'$set': {'deleted':True}})
 ```
-8. Remove detached projects from the database. This should not affect the project folder itself
-9. Backup into a scratch directory, then note its size
+8. Backup into a scratch directory, then note its size
 ```
 TEMP_CS_DIR_BACKUP="/scratch/users/jnoh2/cs-temp-backup"
 cryosparcm backup --dir="$TEMP_CS_DIR_BACKUP" #Run this as a job
 ```
-10. Note the size of the original cryosparc instance
-11. Run compaction through MongoDB
+9. Note the size of the original cryosparc instance
+10. Run compaction through MongoDB
 ```
 cryosparcm restart
 cryosparcm compact #Run this as a job
 ```
-12. Note the size of the new cryosparc instance and compare to the backup + original sizes
-13. Store a backup copy in group_home
-14. Turn maintenance mode off
+11. Note the size of the new cryosparc instance and compare to the backup + original sizes
+12. Store a backup copy in group_home
+13. Turn maintenance mode off
 ```
 cryosparcm maintenancemode off
 ```
-15. Turn message of the day off
+14. Turn message of the day off
 ```
 cryosparcm cli "set_instance_banner(False)"
 ```
-16. Let users know to check for integrity of their projects
+15. Let users know to check for integrity of their projects
 
 ## Updating versions
 1. Let users know not to use CryoSPARC or do any related activities

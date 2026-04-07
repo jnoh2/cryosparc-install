@@ -357,11 +357,20 @@ cryosparcm compact #Run this as a job
 # First, turn cryosparc off
 # Make sure you have a long enough master node job such that you will override the database path during config setting (or turn it off)
 # Then, rename the DB path to the one you want (may want to edit both the actual config file and the template)
+# Temporarily make a copy of the original db in scratch just in case
 cryosparcm restore --file="/scratch/users/jnoh2/cs-backups/cryosparc_backup_2026_04_07_10h06.archive"
 
 # Check the size of the new cryosparc instance and compare to backup + original sizes
 # If the size is better, then confirm that the new database is safe
-# If the database is safe, move the database to somewhere new and edit the config and tempalte both
+# If the database is safe, move the database to somewhere new and edit the config and template both
+# Note that there are five locations to manage:
+# Initial backup
+# Raw rsync
+# Original db
+# New db
+# Config file
+# Template file
+# Make sure you're happy with all of these
 ```
 14. Turn maintenance mode off
 ```
